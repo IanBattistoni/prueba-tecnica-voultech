@@ -36,3 +36,4 @@ C:\Users\Ian Battistoni\Documents\.Net\PruebaTecnicaApi\bin\Debug\net10.0\Micros
 C:\Users\Ian Battistoni\Documents\.Net\PruebaTecnicaApi\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Ian Battistoni\Documents\.Net\PruebaTecnicaApi\bin\Debug\net10.0\Npgsql.dll
 C:\Users\Ian Battistoni\Documents\.Net\PruebaTecnicaApi\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\Ian Battistoni\Documents\.Net\PruebaTecnicaApi\obj\Debug\net10.0\PruebaTecnicaApi.sourcelink.json

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
-
+using System.Text.RegularExpressions;
 namespace PruebaTecnicaApi.Controllers;
 
 [ApiController]
@@ -76,6 +76,12 @@ public class UsersController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(body.Name))
             return BadRequest(new { message = "El nombre es obligatorio" });
+
+        if (body.Name.Length > 20)
+            return BadRequest(new { message = "El nombre no puede tener más de 20 caracteres" });
+
+        if (!Regex.IsMatch(body.Name, @"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"))
+            return BadRequest(new { message = "El nombre solo puede contener letras y espacios" });
 
         await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync();
