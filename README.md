@@ -6,6 +6,24 @@
 
 API REST desarrollada en .NET utilizando PostgreSQL.
 
+# Instalación y ejecución
+
+## 1. Clonar repositorio
+```bash
+git clone https://github.com/IanBattistoni/exdev-website.git
+```
+
+## 2. Instalar dependencias
+```bash
+dotnet restore
+```
+
+## 3. Correr la API
+```bash
+dotnet run
+```
+
+
 # Despliegue
 
 ### Producción (Azure)
@@ -49,11 +67,6 @@ http://localhost:5225/api
 | POST | `/users` | Crea un nuevo cliente | `{ "name": "Juan" }` |
 
 
-### Productos
-- POST /productos
-- GET /productos
+## Requisitos
 
-### Usuarios
-- POST /users
-- GET /users
-- GET /users/{id}
+- .NET SDK 10
