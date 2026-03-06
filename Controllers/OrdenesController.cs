@@ -365,4 +365,61 @@ public class OrdenesController : ControllerBase
             });
         }
     }
+
+    // GET /ordenes/cliente/{clienteId}
+    [HttpGet("cliente/{clienteId:int}")]
+    public async Task<IActionResult> GetOrdenesPorCliente(int clienteId)
+    {
+        try
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            // verifica que exista el usuario
+            var existeClienteSql = "SELECT COUNT(*) FROM public.clientes WHERE id = @cliente_id";
+            await using (var existeClienteCmd = new NpgsqlCommand(existeClienteSql, conn))
+            {
+                existeClienteCmd.Parameters.AddWithValue("cliente_id", clienteId);
+                var existeCliente = (long)await existeClienteCmd.ExecuteScalarAsync();
+
+                if (existeCliente == 0)
+                    return NotFound(new { message = $"El cliente {clienteId} no existe." });
+            }
+
+            var ordenes = new List<object>();
+
+            var sql = @"
+                SELECT id, cliente_id, cliente_nombre, fecha_creacion, total
+                FROM public.ordenes
+                WHERE cliente_id = @cliente_id
+                ORDER BY fecha_creacion DESC, id DESC";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("cliente_id", clienteId);
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                ordenes.Add(new
+                {
+                    Id = reader.GetInt32(0),
+                    ClienteId = reader.GetInt32(1),
+                    ClienteNombre = reader.GetString(2),
+                    FechaCreacion = reader.GetDateTime(3),
+                    Total = reader.GetDecimal(4)
+                });
+            }
+
+            return Ok(ordenes);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Error interno del servidor.",
+                detail = ex.Message
+            });
+        }
+    }
 }
