@@ -86,14 +86,33 @@ public class UsersController : ControllerBase
         await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync();
 
-        var sql = @"INSERT INTO public.clientes(nombre)
-                    VALUES(@nombre)
-                    RETURNING id";
+        // verifica si ya existe
+        var existeSql = @"SELECT id FROM public.clientes WHERE nombre = @nombre";
 
-        await using var cmd = new NpgsqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("nombre", body.Name);
+        await using var existeCmd = new NpgsqlCommand(existeSql, conn);
+        existeCmd.Parameters.AddWithValue("nombre", body.Name);
 
-        var id = await cmd.ExecuteScalarAsync();
+        var existente = await existeCmd.ExecuteScalarAsync();
+
+        if (existente != null)
+        {
+            return Ok(new
+            {
+                Id = existente,
+                Name = body.Name,
+                message = "Usuario ya existente, usando id existente"
+            });
+        }
+
+        // crea usuario si no existe
+        var insertSql = @"INSERT INTO public.clientes(nombre)
+                        VALUES(@nombre)
+                        RETURNING id";
+
+        await using var insertCmd = new NpgsqlCommand(insertSql, conn);
+        insertCmd.Parameters.AddWithValue("nombre", body.Name);
+
+        var id = await insertCmd.ExecuteScalarAsync();
 
         return Created($"/api/users/{id}", new
         {
