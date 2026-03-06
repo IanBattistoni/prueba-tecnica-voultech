@@ -10,7 +10,7 @@ API REST desarrollada en .NET utilizando PostgreSQL.
 
 ## 1. Clonar repositorio
 ```bash
-git clone https://github.com/IanBattistoni/exdev-website.git
+git clone https://github.com/IanBattistoni/prueba-tecnica-voultech.git
 ```
 
 ## 2. Instalar dependencias
